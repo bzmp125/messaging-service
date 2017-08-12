@@ -109,7 +109,7 @@ router.post('/emails', allValidators, jsonParser, (req, res) => {
                     }
                 })
             }else{
-                res.json(functions.return(false,"FAILED TO SEND EMAIL."))
+                res.json(functions.return(false,"UNABLE TO SEND EMAIL."))
             }
         }else{
             sendEmail(content,allRecipients).then(d=>{
