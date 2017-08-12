@@ -15,7 +15,8 @@ var express = require('express'),
     frello = new Frello(config.frello.appId, config.frello.appSecret),
     allValidators = [functions.adminTokenValidator, functions.shopTokenValidator, functions.tokenValidator, functions.finalValidator]
     SparkPost = require('sparkpost'),
-    emailSendingLimit = config.emailSendingLimit;
+    sparkPostClient = new SparkPost(),
+    emailSendingLimit = config.emailSendingLimit
 
 function generateCode() {
     return new Promise((resolve, reject) => {
@@ -34,7 +35,6 @@ function generateCode() {
 
 function sendEmail(content, recipients) {
     return new Promise((resolve, reject) => {
-        var sparkPostClient = new SparkPost();
         sparkPostClient.transmissions.send({
             content,
             recipients
@@ -114,7 +114,27 @@ router.post('/emails', allValidators, jsonParser, (req, res) => {
         }else{
             sendEmail(content,allRecipients).then(d=>{
                 if(d.results && d.results.total_accepted_recipients>0){
-                    res.json(functions.return(true,"EMAIL SENT."))
+                    var sent_by = req.app.get(req.app.get('user_type')+"_id");
+                    var EmailToSave = {
+                        from,
+                        to,
+                        text:message,
+                        sent_by,
+                        email_id:d.results.id,
+                        sent:true
+                    };
+                    var data = new Email(EmailToSave);
+                    data.save().then(doc=>{
+                        if(doc){
+                            res.json(functions.return(true,"EMAIL SENT.",doc))
+                        }else{
+                            res.json(functions.return(false,"EMAIL NOT SAVED."))
+                        }
+                    }).catch(e=>{
+                        console.log('Exception when saving sent email.',e)
+                        res.json(functions.return(false,"FAILED TO SAVE EMAIL."))
+                    })
+
                 }else{
                     res.json(functions.return(false,"EMAIL NOT SENT."))
                 }
@@ -145,7 +165,19 @@ router.get('/emails', allValidators, jsonParser, (req, res) => {
         console.log('Exception whilst getting Emails', e);
         res.json(functions.return(false, "FAILED TO GET EMAILS.")).status(500);
     })
+})
 
+router.get('/emails/:emailId', allValidators, jsonParser, (req, res) => {
+    Email.findOne({_id:req.params.emailId}).then(email => {
+        if (email) {
+            res.json(functions.return(true, "EMAIL FOUND.", email))
+        } else {
+            res.json(functions.return(false, "EMAILS NOT FOUND."))
+        }
+    }).catch(e => {
+        console.log('Exception whilst getting Emails', e);
+        res.json(functions.return(false, "FAILED TO GET EMAILS.")).status(500);
+    })
 })
 
 router.get('/users/:userId/emails', allValidators, (req, res) => {

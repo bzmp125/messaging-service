@@ -103,6 +103,7 @@ module.exports = {
                 console.log('accounts url', config.accountsAPIURL)
                 console.log('verifying the token', d)
                 if (d && d.data && d.message == "TOKEN VERIFIED." && d.data.shop_representative && d.data.shop_representative.id) {
+                    req.app.set('user_type', 'representative');
                     req.app.set('representative_id', d.data.shop_representative.id);
                     req.app.set('authenticated', true)
                 } else {
@@ -138,6 +139,7 @@ module.exports = {
             var request = restClient.get(config.accountsAPIURL + "/token/auth?token=" + req.headers.token, {}, function (d) {
                 console.log('auth d', d)
                 if (d && d.data && d.message == "TOKEN VERIFIED." && d.data.admin && d.data.admin.id) {
+                    req.app.set('user_type', 'admin');
                     req.app.set('admin_id', d.data.admin.id);
                     req.app.set('authenticated', true)
                 } else {
@@ -172,6 +174,7 @@ module.exports = {
             let key = createShopTokenKey(req.headers.token)
             var request = restClient.get(config.accountsAPIURL + "/token/auth?token=" + req.headers.token, {}, function (d) {
                 if (d && d.data && d.message == "TOKEN VERIFIED." && d.data.user && d.data.user.id) {
+                    req.app.set('user_type', 'user');
                     req.app.set('user_id', d.data.user.id);
                     req.app.set('authenticated', true);
                 } else {
