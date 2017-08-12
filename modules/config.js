@@ -69,7 +69,7 @@ var firebaseConfig = {
 var unsecuredRoutes = ['/api/products/search'];
 var maxEmailRetrievalLimit = process.env.MAXEMAILRETRIEVALLIMIT
 var emailSendingLimit = process.env.EMAIL_SENDING_LIMIT;
-
+var accountsAPIURL = process.env.ACCOUNTSAPI_URL;
 module.exports = {
     db,
     algolia,
@@ -78,5 +78,6 @@ module.exports = {
     frello,
     firebaseConfig,
     maxEmailRetrievalLimit,
-    emailSendingLimit
+    emailSendingLimit,
+    accountsAPIURL
 }

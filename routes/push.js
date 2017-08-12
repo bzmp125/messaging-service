@@ -15,7 +15,7 @@ models = require('../modules/Models'),
     admin = require('firebase-admin'),
     serviceAccount = require("../config/notyfaya-firebase-adminsdk-v7jko-d90fcdbebd.json"),
     functions = require('../modules/functions'),
-    allValidators = [functions.validators];
+    allValidators = [functions.adminTokenValidator, functions.shopTokenValidator, functions.tokenValidator, functions.finalValidator]
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
@@ -36,7 +36,7 @@ function generateCode() {
     })
 }
 
-router.post('/push', functions.validators, jsonParser, (req, res) => {
+router.post('/push', allValidators, jsonParser, (req, res) => {
     if (req.body.token) {
         var user_id = req.app.get('user_id')
         PushData.find({ user_id, token: req.body.token }).then(existing => {
@@ -64,7 +64,7 @@ router.post('/push', functions.validators, jsonParser, (req, res) => {
     }
 })
 
-router.post('/push/send', functions.validators, jsonParser, (req, res) => {
+router.post('/push/send', allValidators, jsonParser, (req, res) => {
     if (req.body.user_id && req.body.notification) {
         var user_id = req.body.user_id;
         PushData.find({ user_id }).then(tokens => {

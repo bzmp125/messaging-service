@@ -13,7 +13,7 @@ var express = require('express'),
     EmailQueue = models.EmailQueue,
     Frello = require('../modules/frello'),
     frello = new Frello(config.frello.appId, config.frello.appSecret),
-    allValidators = [functions.validators],
+    allValidators = [functions.adminTokenValidator, functions.shopTokenValidator, functions.tokenValidator, functions.finalValidator]
     SparkPost = require('sparkpost'),
     emailSendingLimit = config.emailSendingLimit;
 
@@ -67,7 +67,7 @@ function dequeue() {
     })
 }
 
-router.post('/emails', functions.validators, jsonParser, (req, res) => {
+router.post('/emails', allValidators, jsonParser, (req, res) => {
     if (req.body.to && req.body.message && req.body.from && req.body.subject) {
         var message = req.body.message;
         var to = req.body.to;
@@ -129,7 +129,7 @@ router.post('/emails', functions.validators, jsonParser, (req, res) => {
     }
 })
 
-router.get('/emails', functions.validators, jsonParser, (req, res) => {
+router.get('/emails', allValidators, jsonParser, (req, res) => {
     var limit = (req.query.limit) ? req.query.limit : config.maxEmailRetrivalLimit;
 
     Email.find().limit(limit).then(emails => {
@@ -148,7 +148,7 @@ router.get('/emails', functions.validators, jsonParser, (req, res) => {
 
 })
 
-router.get('/users/:userId/emails', functions.validators, (req, res) => {
+router.get('/users/:userId/emails', allValidators, (req, res) => {
     var limit = (req.query.limit) ? req.query.limit : config.maxEmailRetrievalLimit;
     Email.find({ user_id: req.params.userId }).limit(limit).then(emails => {
         if (emails.length > 0) {

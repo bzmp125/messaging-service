@@ -1,24 +1,24 @@
 var config = require('./config');
 var md5 = require('md5');
-function createTokenKey(token){
-    return "token-"+md5(new Buffer(token,'base64').toString());
-}
-function createShopRepTokenKey(token){
-    return "shop-rep-token-"+md5(new Buffer(token,'base64').toString());
-}
-function createAdminTokenKey(token){
-    return "admin-token-"+md5(new Buffer(token,'base64').toString());
+function createTokenKey(token) {
+    return "token-" + md5(new Buffer(token, 'base64').toString());
 }
 
-module.exports = {
-    return: function (success, message, data) {
+function createShopTokenKey(token) {
+    return "shop-token-" + md5(new Buffer(token, 'base64').toString());
+}
+
+var Return = function (success, message, data) {
         var returnObj = {
             success,
             message
         };
         if (typeof data !== 'undefined') returnObj.data = data;
         return returnObj;
-    },
+    }
+
+module.exports = {
+    return: Return,
     getUserIdFromToken: function (conn, token) {
         return new Promise((resolve, reject) => {
             unocache.get(createTokenKey(token), (err,val,key)=>{
@@ -32,101 +32,174 @@ module.exports = {
             })
         })
     },
-    /**
-     * So here's how we are going to do authentication using middleware
-     * 
-     * Different callbacks can be chained but at the end there must be the final authenticationValidator() callback
-     * This callback's simple responsibility is to check for authentication by either of the predecessing callbacks.
-     * If the request is not authenticated by the time it reaches it, the request then fails. One important thing to
-     * note is that if the request is then authenticated by one of the callbacks then every other succeeding callback
-     * should just call next()
-     * 
-     */
-    validators:[
-        tokenValidator= (req, res, next) => {
-            console.log('token validator')
-            //if already authenticated proceed
-            if(req.app.get('authenticated') && req.app.get('authenticated')==true) next();
-            else{
+    tokenValidator: (req, res, next) => {
+        if (req.app.get('authenticated') && req.app.get('authenticated')==true) {
+            next();
+        } else {
+            //avoiding checking for token on unsecuredRoutes
+            var url = req.url.split('?')[0];
+
+            //removing trailing slash
+            if (url[url.length - 1] == "/") {
+                url = url.slice(0, url.length - 1);
+            }
+
+            if (config.unsecuredRoutes.indexOf(url) == -1) {
                 //if the token is not set in unocache then it can be checked from
                 //setting up unocache
+                if (!req.headers.token) {
+                    res.json({ success: false, message: "MISSING OR INVALID CREDENTIALS." })
+                }
                 let unocache = config.unocache;
                 let key = createTokenKey(req.headers.token)
+                var request = restClient.get(config.accountsAPIURL + "/token/auth?token=" + req.headers.token, {}, function (d) {
+                    if (d && d.data && d.message == "TOKEN VERIFIED.") {
+                        if(d.data.admin && d.data.admin.id!="undefined")
+                            req.app.set('user_id', d.data.admin.id);
+                        if(d.data.shop_representative && d.data.shop_representative.id!="undefined")
+                            req.app.set('representative_id', d.data.shop_representative.id);
+                        if(d.data.user && d.data.user.id!="undefined")
+                            req.app.set('user_id', d.data.user.id);
 
+                        req.app.set('authenticated', true)
+                    } else {
+                        req.app.set('authenticated', false)
+                    }
+                    next();
+                }, function (e) {
+                    res.json({ success: false, message: "AUTHENTICATION ERROR." });
+                })
+
+                request.on('error', function (error) {
+                    console.log(error)
+                })
                 unocache.get(key, function (err, value, key) {
                     if (err) {
-                        res.json({ success: false, message: "AUTHENTICATION ERROR." });
-                        exit;
-                    }else{
-
-                        if (value != null) {
-                            req.app.set('user_id', value.toString());
-                            req.app.set('authenticated', true);
-                        }                     
-                        next();
-                    }
-                });
-            }
-
-        },
-        shopTokenValidator= (req, res, next) => {
-            //if already authenticated proceed
-            if(req.app.get('authenticated') && req.app.get('authenticated')==true) next();
-            else{
-
-                //if the token is not set in unocache then it can be checked from
-                //setting up unocache
-                let unocache = config.unocache;
-                let key = createShopRepTokenKey(req.headers.token)
-
-                unocache.get(key, function (err, value, key) {
-                    if (err) {
-                        res.json({ success: false, message: "AUTHENTICATION ERROR." });
-                        exit;
-                    }else{
-
-                        if (value != null) {
-                            var value = JSON.parse(value.toString());
-                            req.app.set('user_id', value.user_id);
-                            req.app.set('shop_uid', value.shop_uid);
-                            req.app.set('authenticated', true);
-                        } 
-                        next();
-                    }
-                });
-            }
-        },
-        adminTokenValidator= (req, res, next) => {
-            //if already authenticated proceed
-            if(req.app.get('authenticated') && req.app.get('authenticated')==true) next();
-            else{
-
-                //if the token is not set in unocache then it can be checked from
-                //setting up unocache
-                let unocache = config.unocache;
-                let key = createAdminTokenKey(req.headers.token)
-
-                unocache.get(key, function (err, value, key) {
-                    if (err) {
-                        res.json({ success: false, message: "AUTHENTICATION ERROR." });
-                        exit;
-                    }else{
-                        if (value != null) {
-                            req.app.set('admin_id', value.toString());
-                            req.app.set('authenticated', true);
-                        } 
-                        next();
                     }
 
+                    if (value != null) {
+                    } else {
+                    }
                 });
-            }
-        },
-        requestAuthenticator= (req,res,next)=>{
-            if(req.app.get('authenticated') && req.app.get('authenticated')==true){
+            } else {
                 next();
-            }else{
-                res.json(functions.return(false,"INVALID CREDENTIALS."));
             }
         }
-    ]
+    },
+    originValidator: (req, res, next) => {
+        //check whether request is coming from the right place.
+        next()
+    },
+    shopTokenValidator: (req, res, next) => {
+        if (req.app.get('authenticated') && req.app.get('authenticated')==true) {
+            next()
+        } else {
+            if (!req.headers.token) {
+                res.json({ success: false, message: "MISSING OR INVALID CREDENTIALS." })
+            }
+            let unocache = config.unocache;
+            let key = createShopTokenKey(req.headers.token)
+            var request = restClient.get(config.accountsAPIURL + "/token/auth?token=" + req.headers.token, {}, function (d) {
+                console.log('accounts url', config.accountsAPIURL)
+                console.log('verifying the token', d)
+                if (d && d.data && d.message == "TOKEN VERIFIED." && d.data.shop_representative && d.data.shop_representative.id) {
+                    req.app.set('representative_id', d.data.shop_representative.id);
+                    req.app.set('authenticated', true)
+                } else {
+                    req.app.set('authenticated', false)
+                }
+                next();
+            }, function (e) {
+                res.json({ success: false, message: "AUTHENTICATION ERROR." });
+            })
+
+            request.on('error', function (error) {
+                console.log(error)
+            })
+            unocache.get(key, function (err, value, key) {
+                if (err) {
+                }
+
+                if (value != null) {
+                } else {
+                }
+            });
+        }
+    },
+    adminTokenValidator: (req, res, next) => {
+        if (req.app.get('authenticated') && req.app.get('authenticated')==true) {
+            next();
+        } else {
+            if (!req.headers.token) {
+                res.json({ success: false, message: "MISSING OR INVALID CREDENTIALS." })
+            }
+            let unocache = config.unocache;
+            let key = createShopTokenKey(req.headers.token)
+            var request = restClient.get(config.accountsAPIURL + "/token/auth?token=" + req.headers.token, {}, function (d) {
+                console.log('auth d', d)
+                if (d && d.data && d.message == "TOKEN VERIFIED." && d.data.admin && d.data.admin.id) {
+                    req.app.set('admin_id', d.data.admin.id);
+                    req.app.set('authenticated', true)
+                } else {
+                    req.app.set('authenticated', false)
+                }
+                next();
+            }, function (e) {
+                res.json({ success: false, message: "AUTHENTICATION ERROR." });
+            })
+
+            request.on('error', function (error) {
+                console.log(error)
+            })
+            unocache.get(key, function (err, value, key) {
+                if (err) {
+                }
+
+                if (value != null) {
+                } else {
+                }
+            });
+        }
+    },
+    userTokenValidator: (req, res, next) => {
+        if (req.app.get('authenticated') && req.app.get('authenticated')==true) {
+            next();
+        } else {
+            if (!req.headers.token) {
+                res.json({ success: false, message: "MISSING OR INVALID CREDENTIALS." })
+            }
+            let unocache = config.unocache;
+            let key = createShopTokenKey(req.headers.token)
+            var request = restClient.get(config.accountsAPIURL + "/token/auth?token=" + req.headers.token, {}, function (d) {
+                if (d && d.data && d.message == "TOKEN VERIFIED." && d.data.user && d.data.user.id) {
+                    req.app.set('user_id', d.data.user.id);
+                    req.app.set('authenticated', true);
+                } else {
+                    req.app.set('authenticated', false)
+                }
+                next();
+            }, function (e) {
+                res.json({ success: false, message: "AUTHENTICATION ERROR." });
+            })
+
+            request.on('error', function (error) {
+                console.log(error)
+            })
+            unocache.get(key, function (err, value, key) {
+                if (err) {
+                }
+
+                if (value != null) {
+                } else {
+                }
+            });
+        }
+    },
+    finalValidator(req,res,next){
+        if (req.app.get('authenticated') && req.app.get('authenticated')==true) {
+            next();
+        }else{
+            res.json(Return(false, "MISSING OR INVALID CREDENTIALS."))
+        }    
+    }
 }

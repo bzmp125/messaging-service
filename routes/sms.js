@@ -11,7 +11,7 @@ var express = require('express'),
     SMS = models.SMS,
     Frello = require('../modules/frello'),
     frello = new Frello(config.frello.appId, config.frello.appSecret),
-    allValidators = [functions.validators]
+    allValidators = [functions.adminTokenValidator, functions.shopTokenValidator, functions.tokenValidator, functions.finalValidator]
 
 function generateCode() {
     return new Promise((resolve, reject) => {
@@ -28,7 +28,7 @@ function generateCode() {
     })
 }
 
-router.post('/sms', functions.validators, jsonParser, (req, res) => {
+router.post('/sms', allValidators, jsonParser, (req, res) => {
     if (req.body.to && req.body.message) {
         var message = req.body.message;
         var to = req.body.to;
@@ -63,7 +63,7 @@ router.post('/sms', functions.validators, jsonParser, (req, res) => {
     }
 })
 
-router.post('/sms/lists/:listId', functions.validators, jsonParser, (req, res) => {
+router.post('/sms/lists/:listId', allValidators, jsonParser, (req, res) => {
     if (req.body.message) {
         var from = (req.body.from) ? req.body.from : null;
 
@@ -79,7 +79,7 @@ router.post('/sms/lists/:listId', functions.validators, jsonParser, (req, res) =
     }
 })
 
-router.post('/sms/templates/:templateId/list', functions.validators, jsonParser, (req, res) => {
+router.post('/sms/templates/:templateId/list', allValidators, jsonParser, (req, res) => {
     if (req.body.message && req.body.list_id && req.body.variables) {
         var from = (req.body.from) ? req.body.from : null;
 
@@ -95,7 +95,7 @@ router.post('/sms/templates/:templateId/list', functions.validators, jsonParser,
     }
 })
 //this one sends to individual number(s) not an entire list
-router.post('/sms/templates/:templateId', functions.validators, jsonParser, (req, res) => {
+router.post('/sms/templates/:templateId', allValidators, jsonParser, (req, res) => {
     if (req.body.message && req.body.to && req.body.variables) {
         var from = (req.body.from) ? req.body.from : null;
 
