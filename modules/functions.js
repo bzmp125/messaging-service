@@ -95,6 +95,7 @@ module.exports = {
         if (req.app.get('authenticated') && req.app.get('authenticated') == true) {
             next()
         } else {
+            console.log('headers',req.headers)
             if (req.headers.token == null) {
                 res.json({ success: false, message: "MISSING OR INVALID CREDENTIALSs." })
             }

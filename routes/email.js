@@ -67,7 +67,7 @@ function dequeue() {
     })
 }
 
-router.post('/emails', allValidators, jsonParser, (req, res) => {
+router.post('/emails', functions.tokenValidator,functions.finalValidator, jsonParser, (req, res) => {
     console.log('query',req.query)
     console.log('body',req.body)
     if (req.body.to && req.body.message && req.body.from && req.body.subject) {
