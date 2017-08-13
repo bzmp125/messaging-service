@@ -9,31 +9,32 @@ function createShopTokenKey(token) {
 }
 
 var Return = function (success, message, data) {
-        var returnObj = {
-            success,
-            message
-        };
-        if (typeof data !== 'undefined') returnObj.data = data;
-        return returnObj;
-    }
+    var returnObj = {
+        success,
+        message
+    };
+    if (typeof data !== 'undefined') returnObj.data = data;
+    return returnObj;
+}
 
 module.exports = {
     return: Return,
     getUserIdFromToken: function (conn, token) {
         return new Promise((resolve, reject) => {
-            unocache.get(createTokenKey(token), (err,val,key)=>{
-                if(err)
+            unocache.get(createTokenKey(token), (err, val, key) => {
+                if (err)
                     reject();
-                if(val!=null){
+                if (val != null) {
                     resolve(val.toString());
-                }else{
+                } else {
                     reject();
                 }
             })
         })
     },
     tokenValidator: (req, res, next) => {
-        if (req.app.get('authenticated') && req.app.get('authenticated')==true) {
+
+        if (req.app.get('authenticated') && req.app.get('authenticated') == true) {
             next();
         } else {
             //avoiding checking for token on unsecuredRoutes
@@ -47,19 +48,26 @@ module.exports = {
             if (config.unsecuredRoutes.indexOf(url) == -1) {
                 //if the token is not set in unocache then it can be checked from
                 //setting up unocache
-                if (!req.headers.token) {
+
+                if (req.headers.token==null) {
                     res.json({ success: false, message: "MISSING OR INVALID CREDENTIALS." })
                 }
                 let unocache = config.unocache;
                 let key = createTokenKey(req.headers.token)
                 var request = restClient.get(config.accountsAPIURL + "/token/auth?token=" + req.headers.token, {}, function (d) {
                     if (d && d.data && d.message == "TOKEN VERIFIED.") {
-                        if(d.data.admin && d.data.admin.id!="undefined")
+                        if (d.data.admin && d.data.admin.id != "undefined") {
+                            req.app.set('user_type', 'admin');
                             req.app.set('user_id', d.data.admin.id);
-                        if(d.data.shop_representative && d.data.shop_representative.id!="undefined")
+                        }
+                        if (d.data.shop_representative && d.data.shop_representative.id != "undefined") {
+                            req.app.set('user_type', 'representative');
                             req.app.set('representative_id', d.data.shop_representative.id);
-                        if(d.data.user && d.data.user.id!="undefined")
+                        }
+                        if (d.data.user && d.data.user.id != "undefined") {
+                            req.app.set('user_type', 'user');
                             req.app.set('user_id', d.data.user.id);
+                        }
 
                         req.app.set('authenticated', true)
                     } else {
@@ -91,7 +99,7 @@ module.exports = {
         next()
     },
     shopTokenValidator: (req, res, next) => {
-        if (req.app.get('authenticated') && req.app.get('authenticated')==true) {
+        if (req.app.get('authenticated') && req.app.get('authenticated') == true) {
             next()
         } else {
             if (!req.headers.token) {
@@ -128,7 +136,7 @@ module.exports = {
         }
     },
     adminTokenValidator: (req, res, next) => {
-        if (req.app.get('authenticated') && req.app.get('authenticated')==true) {
+        if (req.app.get('authenticated') && req.app.get('authenticated') == true) {
             next();
         } else {
             if (!req.headers.token) {
@@ -164,7 +172,7 @@ module.exports = {
         }
     },
     userTokenValidator: (req, res, next) => {
-        if (req.app.get('authenticated') && req.app.get('authenticated')==true) {
+        if (req.app.get('authenticated') && req.app.get('authenticated') == true) {
             next();
         } else {
             if (!req.headers.token) {
@@ -198,11 +206,11 @@ module.exports = {
             });
         }
     },
-    finalValidator(req,res,next){
-        if (req.app.get('authenticated') && req.app.get('authenticated')==true) {
+    finalValidator(req, res, next) {
+        if (req.app.get('authenticated') && req.app.get('authenticated') == true) {
             next();
-        }else{
+        } else {
             res.json(Return(false, "MISSING OR INVALID CREDENTIALS."))
-        }    
+        }
     }
 }
