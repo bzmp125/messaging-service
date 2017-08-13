@@ -57,7 +57,7 @@ module.exports = {
                         if (d && d.data && d.message == "TOKEN VERIFIED.") {
                             if (d.data.admin && d.data.admin.id != "undefined") {
                                 req.app.set('user_type', 'admin');
-                                req.app.set('user_id', d.data.admin.id);
+                                req.app.set('admin_id', d.data.admin.id);
                             }
                             if (d.data.shop_representative && d.data.shop_representative.id != "undefined") {
                                 req.app.set('user_type', 'representative');
