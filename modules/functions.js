@@ -102,7 +102,7 @@ module.exports = {
         if (req.app.get('authenticated') && req.app.get('authenticated') == true) {
             next()
         } else {
-            if (!req.headers.token) {
+            if (req.headers.token==null) {
                 res.json({ success: false, message: "MISSING OR INVALID CREDENTIALS." })
             }
             let unocache = config.unocache;
@@ -139,7 +139,7 @@ module.exports = {
         if (req.app.get('authenticated') && req.app.get('authenticated') == true) {
             next();
         } else {
-            if (!req.headers.token) {
+            if (req.headers.token==null) {
                 res.json({ success: false, message: "MISSING OR INVALID CREDENTIALS." })
             }
             let unocache = config.unocache;
