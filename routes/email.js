@@ -117,6 +117,7 @@ router.post('/emails', functions.tokenValidator,functions.finalValidator, jsonPa
                     var user_type = req.app.get('user_type');
                     var key = user_type + "_id";
                     var sent_by = key + req.app.get(key);
+                    console.log('sent_by',sent_by)
 
                     var EmailToSave = {
                         from,
