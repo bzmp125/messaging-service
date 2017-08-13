@@ -68,6 +68,8 @@ function dequeue() {
 }
 
 router.post('/emails', allValidators, jsonParser, (req, res) => {
+    console.log('query',req.query)
+    console.log('body',req.body)
     if (req.body.to && req.body.message && req.body.from && req.body.subject) {
         var message = req.body.message;
         var to = req.body.to;
