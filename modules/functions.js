@@ -48,8 +48,8 @@ module.exports = {
             if (config.unsecuredRoutes.indexOf(url) == -1) {
                 //if the token is not set in unocache then it can be checked from
                 //setting up unocache
-
-                if (req.headers.token == null) {
+                console.log('theaders',req.headers)
+                if (req.headers.token==null) {
                     res.json({ success: false, message: "MISSING OR INVALID CREDENTIALSt." })
                 } else {
                     let unocache = config.unocache;
@@ -95,7 +95,7 @@ module.exports = {
         if (req.app.get('authenticated') && req.app.get('authenticated') == true) {
             next()
         } else {
-            console.log('headers',req.headers)
+            console.log('sheaders',req.headers)
             if (req.headers.token == null) {
                 res.json({ success: false, message: "MISSING OR INVALID CREDENTIALSs." })
             }
