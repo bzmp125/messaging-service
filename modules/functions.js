@@ -50,7 +50,7 @@ module.exports = {
                 //setting up unocache
 
                 if (req.headers.token == null) {
-                    res.json({ success: false, message: "MISSING OR INVALID CREDENTIALS." })
+                    res.json({ success: false, message: "MISSING OR INVALID CREDENTIALSt." })
                 } else {
                     let unocache = config.unocache;
                     let key = createTokenKey(req.headers.token)
@@ -96,7 +96,7 @@ module.exports = {
             next()
         } else {
             if (req.headers.token == null) {
-                res.json({ success: false, message: "MISSING OR INVALID CREDENTIALS." })
+                res.json({ success: false, message: "MISSING OR INVALID CREDENTIALSs." })
             }
             let unocache = config.unocache;
             let key = createShopTokenKey(req.headers.token)
@@ -125,7 +125,7 @@ module.exports = {
             next();
         } else {
             if (req.headers.token == null) {
-                res.json({ success: false, message: "MISSING OR INVALID CREDENTIALS." })
+                res.json({ success: false, message: "MISSING OR INVALID CREDENTIALSa." })
             } else {
                 let unocache = config.unocache;
                 let key = createShopTokenKey(req.headers.token)
@@ -154,7 +154,7 @@ module.exports = {
             next();
         } else {
             if (req.headers.token == null) {
-                res.json({ success: false, message: "MISSING OR INVALID CREDENTIALS." })
+                res.json({ success: false, message: "MISSING OR INVALID CREDENTIALSu." })
             } else {
                 let unocache = config.unocache;
                 let key = createShopTokenKey(req.headers.token)
