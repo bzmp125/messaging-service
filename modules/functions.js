@@ -48,9 +48,8 @@ module.exports = {
             if (config.unsecuredRoutes.indexOf(url) == -1) {
                 //if the token is not set in unocache then it can be checked from
                 //setting up unocache
-                console.log('theaders',req.headers)
                 if (req.headers.token==null) {
-                    res.json({ success: false, message: "MISSING OR INVALID CREDENTIALSt." })
+                    res.json({ success: false, message: "MISSING OR INVALID CREDENTIALS." })
                 } else {
                     let unocache = config.unocache;
                     let key = createTokenKey(req.headers.token)
@@ -95,15 +94,13 @@ module.exports = {
         if (req.app.get('authenticated') && req.app.get('authenticated') == true) {
             next()
         } else {
-            console.log('sheaders',req.headers)
             if (req.headers.token == null) {
-                res.json({ success: false, message: "MISSING OR INVALID CREDENTIALSs." })
+                res.json({ success: false, message: "MISSING OR INVALID CREDENTIALS." })
             }
             let unocache = config.unocache;
             let key = createShopTokenKey(req.headers.token)
             var request = restClient.get(config.accountsAPIURL + "/token/auth?token=" + req.headers.token, {}, function (d) {
-                console.log('accounts url', config.accountsAPIURL)
-                console.log('verifying the token', d)
+
                 if (d && d.data && d.message == "TOKEN VERIFIED." && d.data.shop_representative && d.data.shop_representative.id) {
                     req.app.set('user_type', 'representative');
                     req.app.set('representative_id', d.data.shop_representative.id);
@@ -126,12 +123,12 @@ module.exports = {
             next();
         } else {
             if (req.headers.token == null) {
-                res.json({ success: false, message: "MISSING OR INVALID CREDENTIALSa." })
+                res.json({ success: false, message: "MISSING OR INVALID CREDENTIALS." })
             } else {
                 let unocache = config.unocache;
                 let key = createShopTokenKey(req.headers.token)
                 var request = restClient.get(config.accountsAPIURL + "/token/auth?token=" + req.headers.token, {}, function (d) {
-                    console.log('auth d', d)
+
                     if (d && d.data && d.message == "TOKEN VERIFIED." && d.data.admin && d.data.admin.id) {
                         req.app.set('user_type', 'admin');
                         req.app.set('admin_id', d.data.admin.id);
@@ -155,7 +152,7 @@ module.exports = {
             next();
         } else {
             if (req.headers.token == null) {
-                res.json({ success: false, message: "MISSING OR INVALID CREDENTIALSu." })
+                res.json({ success: false, message: "MISSING OR INVALID CREDENTIALS." })
             } else {
                 let unocache = config.unocache;
                 let key = createShopTokenKey(req.headers.token)

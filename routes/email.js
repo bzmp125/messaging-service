@@ -68,8 +68,6 @@ function dequeue() {
 }
 
 router.post('/emails', functions.tokenValidator,functions.finalValidator, jsonParser, (req, res) => {
-    console.log('query',req.query)
-    console.log('body',req.body)
     if (req.body.to && req.body.message && req.body.from && req.body.subject) {
         var message = req.body.message;
         var to = req.body.to;
@@ -118,7 +116,6 @@ router.post('/emails', functions.tokenValidator,functions.finalValidator, jsonPa
                 if(d.results && d.results.total_accepted_recipients>0){
                     var user_type = req.app.get('user_type');
                     var sent_by = user_type + req.app.get(user_type + "_id");
-console.log('sent_by',sent_by)
 
                     var EmailToSave = {
                         from,
