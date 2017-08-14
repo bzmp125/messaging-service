@@ -19,6 +19,11 @@ git clone https://github.com/bzmp125/messaging-service
 npm install
 ```
 
-Then you'd have to set the credentials of the APIS as environment variables. This allows the service to be configurable even on-the-fly or for different deployment enviroments.
+Then you'd have to set the credentials of the APIS as environment variables explained in[documentation site](). This allows the service to be configurable even on-the-fly or for different deployment enviroments.
 
-The service can be deploy on any server and can be reached via a simple HTTP REST API. For more documentation on the actual endpoints, go to the [documentation site]()
+The service can be deploy on any server and can be reached via a simple HTTP REST API built with ExpressJS. For more documentation on the actual endpoints, go to the [documentation site]().
+
+## The Future
+1. Push Notifications - This will probably be through Firebase's FCM.
+2. CLi - to spawn the entire project from an `init` command and also deploy to different cloud providers to help automate the deployment, orchestration and monitoring of the whole application the service would then belong to.
+3. Docker image on Docker Hub - because why not!
