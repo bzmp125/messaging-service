@@ -10,4 +10,15 @@ For Email, the service uses Sparkpost. You can signup [here](https://app.sparkpo
 ### SMS 
 For SMS, the service uses the [Frello](http://frello.co.zw) API, which is a bulk SMS API with a whole lot of other features like Scheduled and Templated Messages all available on the API. You can signup [here](http://dashboard.frello.co.zw) to create an app/integration and then get an APP_ID and APP_Secret to then use in the service. For more information and helper libraries to [the Github repo.](https://github.com/bzmp125).
 
+## Getting Started
+The service can be deployed on any server, and to get started, you can follow these simple steps.
+
+`mkdir messaging-service
+cd messaging-service
+git clone https://github.com/bzmp125/messaging-service
+npm install` 
+
+Then you'd have to set the credentials of the APIS as environment variables using the following commands:
+
+
 The service can be deploy on any server and can be reached via a simple HTTP REST API. C
