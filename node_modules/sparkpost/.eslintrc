@@ -1,6 +1,0 @@
-{
-  "extends": "sparkpost/api",
-  "globals": {
-    "Promise": true
-  }
-}
