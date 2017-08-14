@@ -1,13 +1,16 @@
 var Client = require('node-rest-client').Client,
     restClient = new Client(),
     base64 = require('base-64')
-
-
+ 
 class frello {
     constructor(APP_ID, APP_SECRET) {
-        this.APP_ID = APP_ID;
-        this.APP_SECRET = APP_SECRET
-        this.baseUrl = 'http://api.frello.co.zw/v4';
+        if (!APP_ID || !APP_SECRET)
+            throw Error('Invalid or missing Frello Credentials.')
+        else {
+            this.APP_ID = APP_ID;
+            this.APP_SECRET = APP_SECRET
+            this.baseUrl = 'http://api.frello.co.zw/v4';
+        }
     }
 
     sendSMS(to, message, from) {
@@ -17,7 +20,9 @@ class frello {
             }
 
             if (!message || !to) {
-                reject({ error: "MISSING OR INVALID PARAMETERS" })
+                reject({
+                    error: "MISSING OR INVALID PARAMETERS"
+                })
             }
 
             var data = {
@@ -30,8 +35,13 @@ class frello {
             if (from)
                 data.from = from;
 
-            var req = restClient.post(this.baseUrl + "/messages", { parameters: data, headers: { "Content-Type": "application/json" } }, d => {
-                console.log('d',d)
+            var req = restClient.post(this.baseUrl + "/messages", {
+                parameters: data,
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }, d => {
+                console.log('d', d)
                 if (d && d.data && d.message == "MESSAGE SENT.")
                     resolve(d.data)
                 else
@@ -55,7 +65,9 @@ class frello {
             }
 
             if (!message || !list_id) {
-                reject({ error: "MISSING OR INVALID PARAMETERS" })
+                reject({
+                    error: "MISSING OR INVALID PARAMETERS"
+                })
             }
 
             var data = {
@@ -66,9 +78,16 @@ class frello {
 
             if (from)
                 data.from = from;
-
-            var req = restClient.post(this.baseUrl + "/lists/${list_id}/send", {path:{list_id}, parameters: data, headers: { "Content-Type": "application/json" } }, d => {
-                console.log('d',d)
+            var req = restClient.post(this.baseUrl + "/lists/${list_id}/send", {
+                path: {
+                    list_id
+                },
+                parameters: data,
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }, d => {
+                console.log('d', d)
                 if (d && d.data && d.message == "MESSAGE SENT TO LIST.")
                     resolve(d.data)
                 else
@@ -85,14 +104,16 @@ class frello {
         })
     }
 
-    sendTemplateSMSToList(template_Id,variables,list_id,message,from){
+    sendTemplateSMSToList(template_Id, variables, list_id, message, from) {
         return new Promise((resolve, reject) => {
             if (typeof from == "undefined" || !from) {
                 from = null;
             }
 
             if (!message || !list_id) {
-                reject({ error: "MISSING OR INVALID PARAMETERS" })
+                reject({
+                    error: "MISSING OR INVALID PARAMETERS"
+                })
             }
 
             var data = variables;
@@ -104,7 +125,15 @@ class frello {
             if (from)
                 data.from = from;
 
-            var req = restClient.post(this.baseUrl + "/templates/${template_id}", {path:{template_id}, parameters: data, headers: { "Content-Type": "application/json" } }, d => {
+            var req = restClient.post(this.baseUrl + "/templates/${template_id}", {
+                path: {
+                    template_id
+                },
+                parameters: data,
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }, d => {
                 if (d && d.data && d.message == "MESSAGE SENT TO LIST.")
                     resolve(d.data);
                 else
@@ -121,14 +150,16 @@ class frello {
         })
     }
 
-    sendTemplateSMS(template_id,variables,to,message,from){
+    sendTemplateSMS(template_id, variables, to, message, from) {
         return new Promise((resolve, reject) => {
             if (typeof from == "undefined" || !from) {
                 from = null;
             }
 
             if (!message || !to) {
-                reject({ error: "MISSING OR INVALID PARAMETERS" })
+                reject({
+                    error: "MISSING OR INVALID PARAMETERS"
+                })
             }
 
             var data = variables;
@@ -140,7 +171,15 @@ class frello {
             if (from)
                 data.from = from;
 
-            var req = restClient.post(this.baseUrl + "/templates/${template_id}", {path:{template_id}, parameters: data, headers: { "Content-Type": "application/json" } }, d => {
+            var req = restClient.post(this.baseUrl + "/templates/${template_id}", {
+                path: {
+                    template_id
+                },
+                parameters: data,
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }, d => {
                 if (d && d.data && d.message == "MESSAGE SENT.")
                     resolve(d.data);
                 else

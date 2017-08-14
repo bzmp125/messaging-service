@@ -51,7 +51,7 @@ app.get('/', function (req, res) {
 app.use('/static', express.static('node_modules'));
 app.use('/api', require('./routes/sms'));
 app.use('/api', require('./routes/email'));
-app.use('/api', require('./routes/push'));
+//app.use('/api', require('./routes/push'));  //Support for Push Messages coming soon.
 
 
 

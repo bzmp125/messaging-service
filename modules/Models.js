@@ -24,7 +24,6 @@ var Email = new Schema({
     email_id:{type:String,default:''},
     timestamp:{type:Date, default:Date.now},
     sent:{type:Boolean,default:false},
-    sent_by:{type:String, required:true},
     user_id:{type:String}
 })
 

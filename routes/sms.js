@@ -2,16 +2,14 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     jsonParser = bodyParser.json(),
     config = require('../modules/config'),
-    models = require('../modules/Models'),
-    PromotionPars = models.PromotionPars,
     Client = require('node-rest-client').Client,
     restClient = new Client(),
     router = express.Router(),
     functions = require('../modules/functions'),
+    models = require('../modules/Models'),
     SMS = models.SMS,
     Frello = require('../modules/frello'),
-    frello = new Frello(config.frello.appId, config.frello.appSecret),
-    allValidators = [functions.adminTokenValidator, functions.shopTokenValidator, functions.tokenValidator, functions.finalValidator]
+    frello = new Frello(config.frello.appId, config.frello.appSecret)
 
 function generateCode() {
     return new Promise((resolve, reject) => {
@@ -28,7 +26,7 @@ function generateCode() {
     })
 }
 
-router.post('/sms', allValidators, jsonParser, (req, res) => {
+router.post('/sms', jsonParser, (req, res) => {
     if (req.body.to && req.body.message) {
         var message = req.body.message;
         var to = req.body.to;
@@ -63,7 +61,7 @@ router.post('/sms', allValidators, jsonParser, (req, res) => {
     }
 })
 
-router.post('/sms/lists/:listId', allValidators, jsonParser, (req, res) => {
+router.post('/sms/lists/:listId', jsonParser, (req, res) => {
     if (req.body.message) {
         var from = (req.body.from) ? req.body.from : null;
 
@@ -79,7 +77,7 @@ router.post('/sms/lists/:listId', allValidators, jsonParser, (req, res) => {
     }
 })
 
-router.post('/sms/templates/:templateId/list', allValidators, jsonParser, (req, res) => {
+router.post('/sms/templates/:templateId/list', jsonParser, (req, res) => {
     if (req.body.message && req.body.list_id && req.body.variables) {
         var from = (req.body.from) ? req.body.from : null;
 
@@ -95,7 +93,7 @@ router.post('/sms/templates/:templateId/list', allValidators, jsonParser, (req, 
     }
 })
 //this one sends to individual number(s) not an entire list
-router.post('/sms/templates/:templateId', allValidators, jsonParser, (req, res) => {
+router.post('/sms/templates/:templateId', jsonParser, (req, res) => {
     if (req.body.message && req.body.to && req.body.variables) {
         var from = (req.body.from) ? req.body.from : null;
 

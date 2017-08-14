@@ -1,17 +1,20 @@
 {
-  "name": "famkeepa-messaging",
+  "name": "project-messaging",
   "version": "1.0.0",
-  "description": "Official FamKeepa Messaging service for Email, Push & SMS. This service handles all messages leaving FamKeepa.",
+  "description": "Official Project Messaging service for Email, Push & SMS. This service handles all messages leaving the project.",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "heroku local -f Procfile -e .env.local"
   },
   "keywords": [
-    "famkeepa",
-    "famkeepa-messaging"
+    "messaging",
+    "messaging microservice",
+    "microservice",
+    "microservices",
+    "reusable microservices"
   ],
-  "author": "Bakani Pilime",
+  "author": "Bakani Pilime <bzmpilime@gmail.com> (http://bzmp.frello.co.zw)",
   "license": "ISC",
   "dependencies": {
     "algoliasearch": "^3.24.0",

@@ -61,6 +61,7 @@ var frello = {
     appId: process.env.FRELLO_APP_ID,
     appSecret: process.env.FRELLO_APP_SECRET
 }
+
 var firebaseConfig = {
     apiKey: "AIzaSyBCI3J90-Ba19hkHmEdsWRFSvOCYPHvbN4",
     authDomain: "notyfaya.firebaseapp.com"
