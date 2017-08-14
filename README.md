@@ -13,10 +13,10 @@ For SMS, the service uses the [Frello](http://frello.co.zw) API, which is a bulk
 ## Getting Started
 The service can be deployed on any server, and to get started, you can follow these simple steps.
 
-`mkdir messaging-service
-cd messaging-service
-git clone https://github.com/bzmp125/messaging-service
-npm install` 
+`mkdir messaging-service`
+`cd messaging-service`
+`git clone https://github.com/bzmp125/messaging-service`
+`npm install` 
 
 Then you'd have to set the credentials of the APIS as environment variables using the following commands:
 
