@@ -1,19 +1,8 @@
 var http = require('http'),
     express = require('express'),
     app = express(),
-    config = require('./modules/config'),
-    functions = require('./modules/functions'),
     server = http.createServer(app),
-    io = require('socket.io').listen(server),
-    assert = require('assert'),
-    memjs = require('memjs'),
-    memjsclient = memjs.Client.create(),
-    md5 = require('md5'),
-    base64 = require('base-64'),
-    cors = require('cors'),
-    Client = require('node-rest-client').Client,
-    restClient = new Client();
-
+    cors = require('cors')
 
 var corsOptions = {
     origin: '*',
@@ -22,12 +11,9 @@ var corsOptions = {
 }
 app.use(cors(corsOptions));
 
-/* Search times here on the backend */
-var searchStart = 0;
-var searchEnd = 0;
-
+//you can replace MongoDB with any other Database of your choice
 var mongoose = require('mongoose');
-mongoose.connect(process.env.MESSAGEDB_URI);
+mongoose.connect(process.env.MESSAGEDB_URI); //MESSAGEDB_URI is the mongodb uri for the database
 var db = mongoose.connection;
 
 db.on('error', console.error.bind(console, 'Connection Error : '));
@@ -43,31 +29,9 @@ console.log('listening on port ', process.env.PORT)
 
 // Register the index route of your app that returns the HTML file
 app.get('/', function (req, res) {
-    console.log("Homepage");
     res.sendFile(__dirname + '/index.html');
 });
 
-// Expose the node_modules folder as static resources (to access socket.io.js in the browser)
-app.use('/static', express.static('node_modules'));
 app.use('/api', require('./routes/sms'));
 app.use('/api', require('./routes/email'));
 //app.use('/api', require('./routes/push'));  //Support for Push Messages coming soon.
-
-
-
-var from; //which part of the application the search came from
-// Handle connection
-io.on('connection', function (socket) {
-    var connectionId = socket.id;
-
-    io.sockets.connected[connectionId].emit('search_connected', { connectionId });
-    console.log("Connected succesfully to the socket ...", connectionId);
-
-    socket.on('connection-id', data => {
-        io.sockets.connected[connectionId].emit('search_connected', { connectionId });
-    })
-
-    socket.on('search', function (data) {
-
-    });
-});
