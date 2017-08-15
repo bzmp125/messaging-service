@@ -14,8 +14,6 @@ For SMS, the service uses the [Frello](http://frello.co.zw) API, which is a bulk
 The service can be deployed on any server, and to get started, you can follow these simple steps.
 
 ```
-mkdir messaging-service
-cd messaging-service
 git clone https://github.com/bzmp125/messaging-service
 npm install
 npm start
