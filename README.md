@@ -21,7 +21,7 @@ npm install
 
 ```
 
-Then you'd have to set the credentials of the APIS as environment variables explained in the[documentation site](). This allows the service to be configurable even on-the-fly or for different deployment enviroments.
+Then you'd have to set the credentials of the APIS as environment variables explained in the [documentation site](). This allows the service to be configurable even on-the-fly or for different deployment enviroments.
 
 The service can be deployed on any server and can be reached via a simple HTTP REST API built with ExpressJS. For more documentation on the actual endpoints, go to the [documentation site]().
 
