@@ -18,6 +18,8 @@ mkdir messaging-service
 cd messaging-service
 git clone https://github.com/bzmp125/messaging-service
 npm install
+npm start
+
 
 ```
 
