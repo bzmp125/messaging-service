@@ -29,3 +29,4 @@ The service can be deployed on any server and can be reached via a simple HTTP R
 1. Push Notifications - This will probably be through Firebase's FCM.
 2. CLi - to spawn the entire project from an `init` command and also deploy to different cloud providers to help automate the deployment, orchestration and monitoring of the whole application the service would then belong to.
 3. Docker image on Docker Hub - because why not!
+4. Support for Registering to a Service Discovery.
