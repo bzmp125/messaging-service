@@ -5,6 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy":"git add .;git commit -m 'LC';git push origin master",
     "start": "heroku local -f Procfile -e .env.local"
   },
   "keywords": [
