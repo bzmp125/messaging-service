@@ -16,6 +16,10 @@
   ],
   "author": "Bakani Pilime <bzmpilime@gmail.com> (http://bzmp.frello.co.zw)",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bzmp125/messaging-service"
+  },
   "dependencies": {
     "algoliasearch": "^3.24.0",
     "assert": "^1.4.1",
