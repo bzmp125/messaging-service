@@ -13,7 +13,7 @@ app.use(cors(corsOptions));
 
 //you can replace MongoDB with any other Database of your choice
 var mongoose = require('mongoose');
-mongoose.connect(process.env.MESSAGEDB_URI, { userMongoClient:true }); //MESSAGEDB_URI is the mongodb uri for the database
+mongoose.connect(process.env.MESSAGEDB_URI, { useMongoClient:true }); //MESSAGEDB_URI is the mongodb uri for the database
 var db = mongoose.connection;
 
 db.on('error', console.error.bind(console, 'Connection Error : '));
