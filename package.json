@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "deploy":"git add .;git commit -m 'LC';git push origin master",
-    "start": "heroku local -f Procfile -e .env.local"
+    "start": "heroku local -f Procfile -e .env.example"
   },
   "keywords": [
     "messaging",
@@ -15,7 +15,7 @@
     "microservices",
     "reusable microservices"
   ],
-  "author": "Bakani Pilime <bzmpilime@gmail.com> (http://bzmp.frello.co.zw)",
+  "author": "Bakani Pilime <bzmpilime@gmail.com> (http://github.com/bzmp125)",
   "license": "ISC",
   "repository": {
     "type": "git",
