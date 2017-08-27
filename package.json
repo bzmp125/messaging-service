@@ -1,0 +1,46 @@
+{
+  "name": "project-messaging",
+  "version": "1.0.0",
+  "description": "Official Project Messaging service for Email, Push & SMS. This service handles all messages leaving the project.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy":"git add .;git commit -m 'LC';git push origin master",
+    "start": "heroku local -f Procfile -e .env.example"
+  },
+  "keywords": [
+    "messaging",
+    "messaging microservice",
+    "microservice",
+    "microservices",
+    "reusable microservices"
+  ],
+  "author": "Bakani Pilime <bzmpilime@gmail.com> (http://github.com/bzmp125)",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bzmp125/messaging-service"
+  },
+  "dependencies": {
+    "algoliasearch": "^3.24.0",
+    "assert": "^1.4.1",
+    "base-64": "^0.1.0",
+    "body-parser": "^1.17.2",
+    "browser-sync": "^2.18.12",
+    "cors": "^2.8.3",
+    "express": "^4.15.3",
+    "firebase": "^4.1.3",
+    "json-parser": "^1.1.5",
+    "lodash": "^4.17.4",
+    "md5": "^2.2.1",
+    "memjs": "^0.10.2",
+    "mongoose": "^4.10.4",
+    "node-rest-client": "^3.1.0",
+    "socket.io": "^2.0.2",
+    "sparkpost": "^2.1.2"
+  },
+  "engines": {
+    "node": "7.5.0",
+    "npm": "4.1.2"
+  }
+}
