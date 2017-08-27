@@ -26,7 +26,7 @@ Then you'd have to set the credentials of the APIS as environment variables expl
 The service can be deployed on any server and can be reached via a simple HTTP REST API built with ExpressJS. For more documentation on the actual endpoints, go to the [documentation site](https://messaging-service.restlet.io).
 
 ## The Future
-1. Push Notifications - This will probably be through Firebase's FCM.
+~~1. Push Notifications - This will probably be through Firebase's FCM.~~
 2. CLi - to spawn the entire project from an `init` command and also deploy to different cloud providers to help automate the deployment, orchestration and monitoring of the whole application the service would then belong to.
 3. Docker image on Docker Hub - because why not!
 4. Support for Registering to a Service Discovery.
