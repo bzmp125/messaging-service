@@ -10,6 +10,9 @@ For Email, the service uses Sparkpost. You can signup [here](https://app.sparkpo
 ### SMS 
 For SMS, the service uses the [Frello](http://frello.co.zw) API, which is a bulk SMS API with a whole lot of other features like Scheduled and Templated Messages all available on the API. You can signup [here](http://dashboard.frello.co.zw) to create an app/integration and then get an APP_ID and APP_Secret to then use in the service. For more information and helper libraries go to [the Github repo.](https://github.com/bzmp125/frello).
 
+### Push Notifications
+For Push Notifications, the service uses Firebase Cloud Messaging. You can visit the [Firebase Console](https://console.firebase.google.com/) to add a project and also get/setup a service account from the service accounts tab. After downloading the file, ensure to add the path to it in [routes/push.js](https://github.com/bzmp125/messaging-service/blob/master/routes/push.js).
+
 ## Getting Started
 The service can be deployed on any server, and to get started, you can follow these simple steps.
 
