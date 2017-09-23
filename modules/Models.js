@@ -33,10 +33,19 @@ var EmailQueue = new Schema({
     timestamp:{type:Date, default:Date.now},
     sent:{type:Boolean, default:false}
 })
+var PushNotification = new Schema({
+    payload:{type:Object,required:true},
+    timestamp:{type:Date, default:Date.now},
+    sent:{type:Boolean, default:false},
+    sent_by:{type:String,required:true},
+    to:{type:Array, required:true},
+    response:{type:Object}
+})
 
 module.exports = {
     SMS:mongoose.model('SMS',SMS),
     Email:mongoose.model('Email',Email),
     EmailQueue:mongoose.model('EmailQueue',EmailQueue),
     PushData:mongoose.model('PushData',PushData),
+    PushNotification:mongoose.model('PushNotification',PushNotification),
 }
