@@ -87,7 +87,7 @@ router.post('/push/send', jsonParser, (req, res) => {
                 var PushNotificationData = {
                     payload,
                     sent_by: 'descriptive_id_of_sender', //this is for accountability sake, just to know who sent the notification.
-                    to: user_ids
+                    to: user_id
                 }
 
                 var tmp = new PushNotification(PushNotificationData);
