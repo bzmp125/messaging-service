@@ -18,6 +18,7 @@ The service can be deployed on any server, and to get started, you can follow th
 
 ```
 git clone https://github.com/bzmp125/messaging-service
+cd messaging-service
 npm install
 npm start
 
