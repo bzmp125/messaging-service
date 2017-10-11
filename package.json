@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "deploy":"git add .;git commit -m 'LC';git push origin master",
-    "start": "heroku local -f Procfile -e .env.example"
+    "start": "heroku local -f Procfile.local -e .env.example"
   },
   "keywords": [
     "messaging",
